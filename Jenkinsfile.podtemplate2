@@ -51,10 +51,8 @@ def build() {
       // REGISTRY_URL = """744004065806.dkr.ecr.ap-southeast-1.amazonaws.com/${prefixPod}:${envName}"""
       
       script {
-         {
-          print 'username=' + username + 'password=' + password
-          DOCKER_ID=username
-          REGISTRY_URL = """${DOCKER_ID}/test-buildx:latest"""
+         
+        
 
           sh 'echo $password | docker login -u $username --password-stdin'
 
@@ -63,7 +61,7 @@ def build() {
             docker buildx inspect --bootstrap
             docker buildx build --network host --platform linux/amd64,linux/arm64 -t ${REGISTRY_URL} --allow network.host  --pull=true -f reactjs/Dockerfile .
           """
-        }
+        
       }
     }
   }
