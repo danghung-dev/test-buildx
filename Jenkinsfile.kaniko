@@ -8,6 +8,7 @@ pipeline {
   environment {
     DOCKER_ID = credentials('DOCKER_ID')
     DOCKER_PASSWORD = credentials('DOCKER_PASSWORD')
+    WORK_DIR = "/var/jenkins_home/workspace/long-test-kaniko/"
   }
 
   stages {
@@ -22,7 +23,23 @@ pipeline {
     stage('Build') {
       steps {
         echo 'Building image..'
-        sh 'docker buildx build -t $DOCKER_ID/cotu:latest -f reactjs/Dockerfile .'
+        // sh 'pwd'
+        // sh 'ls -la /var/jenkins_home/workspace/long-test-kaniko/'
+        // sh 'ls -la /var/jenkins_home/workspace/long-test-kaniko/reactjs/'
+        // sh 'cat /var/jenkins_home/workspace/long-test-kaniko/reactjs/Dockerfile'
+        // sh """
+        //   cd /var/jenkins_home/workspace/long-test-kaniko/reactjs/
+        //   docker run \
+        //     -v /var/jenkins_home/workspace/long-test-kaniko/reactjs/:/workspace \
+        //     gcr.io/kaniko-project/executor:latest \
+        //     --destination $DOCKER_ID/cotu-kaniko:latest
+        // """
+        sh 'pwd'
+        sh 'ls -la'
+        sh """
+          echo $WORK_DIR
+          bash ./run_in_docker.sh /Dockerfile $WORK_DIR $DOCKER_ID/cotu-kaniko:latest
+        """
       }
     }
     stage('Test') {
@@ -39,7 +56,7 @@ pipeline {
       // }
       steps {
         echo 'Building and publishing multi-arch image to DockerHub..'
-        sh 'docker buildx build --push --platform linux/amd64,linux/arm64 -t $DOCKER_ID/cotu:latest -f reactjs/Dockerfile .'
+        sh 'docker push $DOCKER_ID/cotu-kaniko:latest'
       }
     }
     stage('Cleanup') {

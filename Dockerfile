@@ -1,9 +1,6 @@
-FROM python:3.8-alpine
+FROM gcr.io/google-appengine/debian9:latest
 
-WORKDIR /app
+RUN apt-get update && \
+  apt-get install -y curl
 
-RUN pip3 install pytest
-
-COPY . .
-
-CMD [ "python3", "cotu.py"]
+CMD echo "It's worked!"
