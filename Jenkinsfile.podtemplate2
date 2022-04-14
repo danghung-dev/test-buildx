@@ -54,7 +54,7 @@ def build() {
          
         
 
-          sh 'echo $password | docker login -u $username --password-stdin'
+
 
           sh """
             docker buildx create --use --name mybuilder --driver-opt network=host --buildkitd-flags '--allow-insecure-entitlement network.host'
